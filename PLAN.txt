@@ -1,0 +1,52 @@
+PLAN			Edward Zhuang 1/14/18
+
+AN INTERESTING VARIANT
+
+When looking at variants of Breakout, I found Worms to be the most interesting variant. I like the idea of having a
+large variety of power-ups, as this can drastically change how the game is played. I would like to incorporate some 
+of the same power ups as Worms (ex. faster paddle).  
+
+LEVELS
+
+In my Breakout program, I hope to develop a game with at least three levels. To make the different levels, I will 
+change the velocity of the ball, making it faster in more difficult levels. In addition, I will include blocks that 
+take multiple hits to break, and I will include different block formations. Here is a general description of the 
+levels I plan to build.
+
+Level 1: This will be a standard base level with many bricks that take one hit to break. The ball will also be relatively
+slow.
+
+Level 2: This will be a similar level, but there will be more space in between the bricks. Many of the bricks will take
+two hits to break. The ball will go slightly faster.
+
+Level 3: This level will have many bricks that require three hits to break. The ball will be even faster, and to not
+make it impossibly difficult, the paddle speed will increase accordingly. 
+
+POWER UPS
+
+I will try to include several power ups, which will either drop randomly, or come from a specific block type. Here are 
+some of the power ups I want to implement.
+Extra Life: This power up will give the player another life.
+Fast Paddle: This power up will make the paddle go faster for some time.
+Power ball: For a very short time, the ball will break any brick in one hit, and the ball will not bounce off bricks. 
+
+
+CHEAT KEYS
+
+Here are some cheat keys I want to implement.
+L -> grants you another life. 
+1, 2, 3 -> takes you to that specific level.
+Q, W -> speeds up the ball/slows down the ball.
+A -> allows for vertical movement of the paddle. 
+
+SOMETHING EXTRA
+
+To make my game a little more unique, I want to incorporate "power downs". Sometimes, a brick will drop a power down item.
+If the player DOES NOT retrieve the power down item before it hits the bottom of the screen, then the power down will take
+effect. A few examples of power down items are "smaller paddle" and "fast ball".
+
+ 
+
+
+
+
