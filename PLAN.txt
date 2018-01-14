@@ -28,7 +28,7 @@ I will try to include several power ups, which will either drop randomly, or com
 some of the power ups I want to implement.
 Extra Life: This power up will give the player another life.
 Fast Paddle: This power up will make the paddle go faster for some time.
-Power ball: For a very short time, the ball will break any brick in one hit, and the ball will not bounce off bricks. 
+Power Ball: For a very short time, the ball will break any brick in one hit, and the ball will not bounce off bricks. 
 
 
 CHEAT KEYS
@@ -43,7 +43,9 @@ SOMETHING EXTRA
 
 To make my game a little more unique, I want to incorporate "power downs". Sometimes, a brick will drop a power down item.
 If the player DOES NOT retrieve the power down item before it hits the bottom of the screen, then the power down will take
-effect. A few examples of power down items are "smaller paddle" and "fast ball".
+effect. A few examples of power down items are "smaller paddle" and "fast ball". I believe that this addition will make
+the game more challenging, and force the player to make difficult choices. For example, should the player risk losing the
+ball to avoid having a smaller paddle? 
 
  
 
