@@ -1,5 +1,9 @@
 PLAN			Edward Zhuang 1/14/18
 
+I plan to make a Breakout game, in which a user controls a paddle and hits a ball to try and break bricks. The player is granted three lives,
+and a live is lost when the ball reaches the bottom of the screen. There will be at least three levels that increase in difficulty. The game will
+also feature power ups and "power downs" (which is explained later in this text file) which come from bricks.
+
 AN INTERESTING VARIANT
 
 When looking at variants of Breakout, I found Worms to be the most interesting variant. I like the idea of having a
