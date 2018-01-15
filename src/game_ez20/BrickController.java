@@ -4,6 +4,7 @@ import java.util.*;
 
 import javafx.scene.Group;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,7 +37,7 @@ public class BrickController {
 				int xCoord = scan.nextInt();
 				int yCoord = scan.nextInt();
 
-				Brick brick = new Brick(brickmap.get(type), xCoord, yCoord);
+				Brick brick = new Brick(brickmap.get(type), xCoord, yCoord, type);
 
 				bricklist.add(brick);
 
@@ -56,7 +57,7 @@ public class BrickController {
 		}
 	}
 	
-	public void CollisionChecker(Ball ball, Group root) {
+	public void CollisionChecker(Ball ball, Group root, PowerController powerController) {
 
 		for (int y = 0; y < bricklist.size(); y++) {
 			if (ball.imageview.getBoundsInParent().intersects(bricklist.get(y).imageview.getBoundsInParent())) {
@@ -79,9 +80,23 @@ public class BrickController {
 						+ bricklist.get(y).imageview.getBoundsInParent().getHeight())) {
 					ball.yDirect = 1;
 				}
-
+				
+				bricklist.get(y).health--; 
+				if (bricklist.get(y).health == 0) {
+				bricklist.get(y).ReleasePower(powerController, root);
 				root.getChildren().remove(bricklist.get(y).imageview);
 				bricklist.remove(y);
+				}
+				else {
+					root.getChildren().remove(bricklist.get(y).imageview);
+					bricklist.get(y).imageview = new ImageView(brickmap.get(bricklist.get(y).health));
+					bricklist.get(y).imageview.setX(bricklist.get(y).xCoord);
+					bricklist.get(y).imageview.setY(bricklist.get(y).yCoord);
+					root.getChildren().add(bricklist.get(y).imageview);
+					
+					
+				}
+				
 			}
 
 		}
