@@ -6,12 +6,9 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+public class Brick extends Item {
 
-
-public class Brick extends Item{
-	
-
-int health; 
+	int health;
 
 	public Brick(Image image, int startX, int startY, int startHealth) {
 		imageview = new ImageView(image);
@@ -23,18 +20,15 @@ int health;
 		imageview.setX(xCoord);
 		imageview.setY(yCoord);
 	}
-	
-	
+
 	public void ReleasePower(PowerController powerController, Group root) {
 		Random rand = new Random();
 		// 10% of dropping a power up
 
-		if (rand.nextInt(10)>8) {
-			powerController.AddPower(rand.nextInt(3)+1, xCoord, yCoord, rand.nextInt(100)+50, root);
+		if (rand.nextInt(10) > 7) {
+			powerController.AddPower(4, xCoord, yCoord, rand.nextInt(100) + 50, root);
 		}
-		
-		
-		
+
 	}
-	
+
 }

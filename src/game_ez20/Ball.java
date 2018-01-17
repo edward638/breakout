@@ -9,12 +9,16 @@ public class Ball extends Item {
 	public int lives = 3;
 	public int xDirect = 1;
 	public int yDirect = -1;
-
+	public int powerBall = 0;
+	public int ogSpeed;
+	public int speedTime = 0;
+	
 	public Ball(Image image, int startX, int startY, int startSpeed, int startSize) {
 		imageview = new ImageView(image);
 		xCoord = startX;
 		yCoord = startY;
 		speed = startSpeed;
+		ogSpeed = startSpeed;
 		size = startSize;
 		movable = true;
 		isOn = true;
@@ -22,7 +26,6 @@ public class Ball extends Item {
 		imageview.setFitWidth(size);
 		imageview.setX(xCoord);
 		imageview.setY(yCoord);
-
 	}
 
 	public void reset(int XSIZE, int YSIZE, Paddle paddle, int LIVES) {
@@ -32,8 +35,7 @@ public class Ball extends Item {
 		imageview.setY(YSIZE - 65);
 		paddle.imageview.setY(YSIZE - 50);
 		lives = LIVES - 1;
-		
-		
+
 		yDirect = -1;
 	}
 
@@ -59,6 +61,22 @@ public class Ball extends Item {
 		}
 		if (imageview.getBoundsInParent().intersects(paddle.imageview.getBoundsInParent())) {
 			yDirect = -1;
+
+			if (paddle.stretchPaddleTime > 0) {
+				paddle.stretchPaddleTime--;
+				if (paddle.stretchPaddleTime == 0)
+					paddle.imageview.setFitWidth(paddle.ogWidth);
+			}
+			
+			if (speedTime > 0) {
+				speedTime--;
+				if (speedTime == 0)
+					speed = ogSpeed; 
+			}
+			
+			if (powerBall > 1) {
+				powerBall = 0;
+			}
 
 			// right side of paddle bounces ball to the right
 			if (imageview.getX() >= paddle.imageview.getX() + paddle.imageview.getBoundsInParent().getWidth() / 2)
