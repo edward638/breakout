@@ -3,6 +3,7 @@ package game_ez20;
 import java.util.*;
 
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -25,10 +26,11 @@ public class BrickController {
 	Map<Integer, Image> brickmap = new HashMap<Integer, Image>();
 	File file;
 	int level;
+	int score;
 	Map<Integer, String> levelmap = new HashMap<Integer, String>();
 
-	public BrickController(int startLevel) {
-
+	public BrickController(int startLevel, int startScore) {
+		score = startScore;
 		level = startLevel;
 		brickmap.put(1, brick1);
 		brickmap.put(2, brick2);
@@ -71,11 +73,16 @@ public class BrickController {
 		}
 	}
 
+	public void scoreAdd() {
+		score = score + 1000;
+	}
+	
 	public void CollisionChecker(Ball ball, Group root, PowerController powerController) {
 
 		for (int y = 0; y < bricklist.size(); y++) {
 			if (ball.imageview.getBoundsInParent().intersects(bricklist.get(y).imageview.getBoundsInParent())) {
 				// decide which way to bounce the ball -> check what side of the brick was hit?
+				scoreAdd();
 				if (ball.powerBall > 0) {
 					bricklist.get(y).ReleasePower(powerController, root);
 					root.getChildren().remove(bricklist.get(y).imageview);
@@ -101,6 +108,8 @@ public class BrickController {
 					}
 
 					bricklist.get(y).health--;
+					
+					
 					if (bricklist.get(y).health == 0) {
 						bricklist.get(y).ReleasePower(powerController, root);
 						root.getChildren().remove(bricklist.get(y).imageview);

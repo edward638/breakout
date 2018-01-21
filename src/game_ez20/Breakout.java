@@ -17,18 +17,20 @@ import javafx.util.Duration;
 
 public class Breakout extends Application {
 
-	public static final String PADDLE_IMAGE = "paddle.gif";
-	public static final String BALL_IMAGE = "ball.gif";
-	public static final int XSIZE = 500;
-	public static final int YSIZE = 500;
-	public static int BALL_SPEED = 300;
-	public static int BALL_SIZE = 15;
-	public static int PADDLE_SPEED = 50;
-	public static int PADDLE_SIZE = 500;
-	public static final int FRAMES_PER_SECOND = 60;
-	public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
-	public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-	private Scene myScene, startScene;
+	private final String PADDLE_IMAGE = "paddle.gif";
+	private final String BALL_IMAGE = "ball.gif";
+	private final int XSIZE = 500;
+	private final int YSIZE = 500;
+	private int BALL_SPEED = 300;
+	private int BALL_SIZE = 15;
+	private int PADDLE_SPEED = 40;
+	private int PADDLE_SIZE = 500;
+	private final int FRAMES_PER_SECOND = 60;
+	private final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
+	private final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+	
+	
+	private Scene myScene, startScene, winScene, lossScene;
 	private Paddle paddle;
 	private Ball ball;
 	private BrickController brickController;
@@ -36,17 +38,59 @@ public class Breakout extends Application {
 	private Timeline animation;
 	Group root = new Group();
 	Group root2 = new Group();
-	public static int LIVES = 3;
+	Group root3 = new Group();
+	Group root4 = new Group();
+	Image ballImage = new Image(getClass().getClassLoader().getResourceAsStream(BALL_IMAGE));
+	Image paddleImage = new Image(getClass().getClassLoader().getResourceAsStream(PADDLE_IMAGE));
+	private int LIVES = 3;
+	private int SCORE = 0;
 	Label lifeLabel;
+	Label scoreLabel;
+	Label finalScoreLabel;
+	Label finalWinScoreLabel;
 	private ImageView finish;
 	private ImageView failure;
 
+	public void restart(Stage firstStage) {
+		root.getChildren().clear();
+		
+		lifeLabel = new Label(String.format("LIVES LEFT: %d", LIVES));
+		scoreLabel = new Label(String.format("SCORE: %d", SCORE));
+		scoreLabel.setLayoutY(15);
+		
+		root.getChildren().add(scoreLabel);
+		root.getChildren().add(lifeLabel);
+		
+		paddle = new Paddle(paddleImage, XSIZE / 2 - 25, YSIZE - 50, PADDLE_SPEED, PADDLE_SIZE);
+
+		ball = new Ball(ballImage, paddle.xCoord + (int) paddle.imageview.getBoundsInParent().getWidth() / 2,
+				paddle.yCoord - BALL_SIZE, BALL_SPEED, BALL_SIZE);
+		ball.movable = false;
+		brickController = new BrickController(1, SCORE);
+
+		powerController = new PowerController(root, YSIZE);
+
+		brickController.drawBricks(root);
+
+		root.getChildren().add(ball.imageview);
+		root.getChildren().add(paddle.imageview);
+		
+		myScene.setOnKeyPressed(e -> keyInput(e.getCode()));
+
+		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY, firstStage));
+		animation = new Timeline();
+		animation.setCycleCount(Timeline.INDEFINITE);
+		animation.getKeyFrames().add(frame);
+		animation.play();
+	}
+	
 	@Override
 	public void start(Stage firstStage) {
 		firstStage.setTitle("Breakout");
 
 		startScene = new Scene(root2, XSIZE, YSIZE, Color.WHITE);
-
+		winScene = new Scene(root3, XSIZE, YSIZE, Color.SALMON);
+		lossScene = new Scene(root4, XSIZE, YSIZE, Color.SALMON);
 		firstStage.setScene(startScene);
 		firstStage.show();
 		Label welcome = new Label("Welcome to Edward Zhuang's Breakout!");
@@ -56,7 +100,47 @@ public class Breakout extends Application {
 		demo.setFitWidth(XSIZE);
 		root2.getChildren().add(demo);
 		Image gameRules = new Image(getClass().getClassLoader().getResourceAsStream("rules.PNG"));
-
+		Image win = new Image(getClass().getClassLoader().getResourceAsStream("congrats.PNG"));
+		Image loss = new Image(getClass().getClassLoader().getResourceAsStream("failure.PNG")); 
+		Image powerguide = new Image(getClass().getClassLoader().getResourceAsStream("powerguide.PNG"));	
+		ImageView powerGuide = new ImageView(powerguide);
+		ImageView gameWin = new ImageView(win);
+		ImageView gameLoss = new ImageView(loss);
+		
+		powerGuide.setFitWidth(XSIZE*.25);
+		powerGuide.setFitHeight(YSIZE*.25);
+		powerGuide.setLayoutY(370);
+		
+		root2.getChildren().add(powerGuide);
+		
+		gameWin.setFitWidth(XSIZE * .9);
+		gameWin.setFitHeight(YSIZE * .3);
+		gameWin.setLayoutX(XSIZE / 20);
+		gameWin.setLayoutY(YSIZE * .25);
+		
+		gameLoss.setFitWidth(XSIZE * .9);
+		gameLoss.setFitHeight(YSIZE * .3);
+		gameLoss.setLayoutX(XSIZE / 20);
+		gameLoss.setLayoutY(YSIZE * .25);
+		
+		Button returnToStart = new Button("Return to Main Menu");
+		returnToStart.setLayoutY(270);
+		returnToStart.setLayoutX(185);
+		returnToStart.setOnAction(e -> firstStage.setScene(startScene));
+		
+		Button returnToStart2 = new Button("Return to Main Menu");
+		returnToStart2.setLayoutY(320);
+		returnToStart2.setLayoutX(185);
+		returnToStart2.setOnAction(e -> firstStage.setScene(startScene));
+		
+		
+		
+		root3.getChildren().add(gameWin);
+		root3.getChildren().add(returnToStart2);
+		root4.getChildren().add(gameLoss);
+		root4.getChildren().add(returnToStart);
+		
+		
 		ImageView rules = new ImageView(gameRules);
 		rules.setFitWidth(XSIZE * .75);
 		rules.setFitHeight(YSIZE * .4);
@@ -64,7 +148,7 @@ public class Breakout extends Application {
 		rules.setLayoutY(YSIZE * .4);
 		root2.getChildren().add(rules);
 		welcome.setLayoutX(80);
-		// welcome.setLayoutX(XSIZE/2);
+		
 		welcome.setFont(new Font("Helvetica", 20));
 		root2.getChildren().add(welcome);
 		Button startGame = new Button("Play Game!");
@@ -74,12 +158,19 @@ public class Breakout extends Application {
 		root2.getChildren().add(startGame);
 
 		myScene = new Scene(root, XSIZE, YSIZE, Color.CORAL);
-		lifeLabel = new Label(String.format("LIVES LEFT: %d", LIVES));
+		restart(firstStage);
+		
+		finalScoreLabel = new Label(String.format("SCORE: %d", SCORE));
+		finalWinScoreLabel = new Label(String.format("SCORE: %d", SCORE));
+		
+		finalWinScoreLabel.setLayoutX(220);
+		finalWinScoreLabel.setLayoutY(280);
+		finalScoreLabel.setLayoutX(220);
+		finalScoreLabel.setLayoutY(240);
+		
+		root3.getChildren().add(finalWinScoreLabel);
+		root4.getChildren().add(finalScoreLabel);
 
-		root.getChildren().add(lifeLabel);
-
-		Image ballImage = new Image(getClass().getClassLoader().getResourceAsStream(BALL_IMAGE));
-		Image paddleImage = new Image(getClass().getClassLoader().getResourceAsStream(PADDLE_IMAGE));
 		Image congrats = new Image(getClass().getClassLoader().getResourceAsStream("congrats.gif"));
 		Image gameover = new Image(getClass().getClassLoader().getResourceAsStream("gameover.gif"));
 		finish = new ImageView(congrats);
@@ -88,28 +179,15 @@ public class Breakout extends Application {
 		failure.setFitWidth(XSIZE);
 		finish.setFitWidth(XSIZE);
 
-		paddle = new Paddle(paddleImage, XSIZE / 2 - 25, YSIZE - 50, PADDLE_SPEED, PADDLE_SIZE);
 
-		ball = new Ball(ballImage, paddle.xCoord + (int) paddle.imageview.getBoundsInParent().getWidth() / 2,
-				paddle.yCoord - BALL_SIZE, BALL_SPEED, BALL_SIZE);
-		ball.movable = false;
-		brickController = new BrickController(1);
 
-		powerController = new PowerController(root, YSIZE);
-
-		brickController.drawBricks(root);
-
-		root.getChildren().add(ball.imageview);
-		root.getChildren().add(paddle.imageview);
-		myScene.setOnKeyPressed(e -> keyInput(e.getCode()));
-
-		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
-		animation = new Timeline();
-		animation.setCycleCount(Timeline.INDEFINITE);
-		animation.getKeyFrames().add(frame);
-		animation.play();
+		
+		
 
 	}
+	
+
+//	}
 
 	private void keyInput(KeyCode code) {
 
@@ -119,7 +197,7 @@ public class Breakout extends Application {
 			for (int x = 0; x < brickController.bricklist.size(); x++) {
 				root.getChildren().remove(brickController.bricklist.get(x).imageview);
 			}
-			brickController = new BrickController(1);
+			brickController = new BrickController(1, SCORE);
 			brickController.drawBricks(root);
 			ball.reset(XSIZE, YSIZE, paddle, LIVES);
 			ball.lives++;
@@ -128,7 +206,7 @@ public class Breakout extends Application {
 			for (int x = 0; x < brickController.bricklist.size(); x++) {
 				root.getChildren().remove(brickController.bricklist.get(x).imageview);
 			}
-			brickController = new BrickController(2);
+			brickController = new BrickController(2, SCORE);
 			brickController.drawBricks(root);
 			ball.reset(XSIZE, YSIZE, paddle, LIVES);
 			ball.lives++;
@@ -137,7 +215,7 @@ public class Breakout extends Application {
 			for (int x = 0; x < brickController.bricklist.size(); x++) {
 				root.getChildren().remove(brickController.bricklist.get(x).imageview);
 			}
-			brickController = new BrickController(3);
+			brickController = new BrickController(3, SCORE);
 			brickController.drawBricks(root);
 			ball.reset(XSIZE, YSIZE, paddle, LIVES);
 			ball.lives++;
@@ -156,7 +234,7 @@ public class Breakout extends Application {
 		}
 	}
 
-	private void step(double elapsedTime) {
+	private void step(double elapsedTime, Stage firstStage) {
 		ball.update(elapsedTime, XSIZE, YSIZE, paddle, LIVES);
 
 		LIVES = ball.lives;
@@ -167,27 +245,51 @@ public class Breakout extends Application {
 		powerController.CollisionChecker(root, paddle, ball, YSIZE);
 
 		brickController.CollisionChecker(ball, root, powerController);
+		
+		
+		SCORE = brickController.score;
+		scoreLabel.setText(String.format("CURRENT SCORE: %d", SCORE));
+		
+		
+		
 		if (brickController.nextLevel() && ((brickController.level + 1) <= 3)) {
-			brickController = new BrickController(brickController.level + 1);
+			brickController = new BrickController(brickController.level + 1, SCORE);
 			brickController.drawBricks(root);
 			ball.reset(XSIZE, YSIZE, paddle, LIVES);
+			
 			ball.lives++;
 			LIVES = LIVES + 1;
 			
 		}
 		if (brickController.nextLevel() && ((brickController.level + 1) == 4)) {
-			root.getChildren().add(finish);
 			animation.pause();
+			finalWinScoreLabel.setText(String.format("SCORE: %d", SCORE));
+			ball.lives = 3;
+			brickController.score = 0;
+			SCORE = 0;
+			scoreLabel.setText(String.format("CURRENT SCORE: %d", SCORE));
+			lifeLabel.setText(String.format("LIVES LEFT: %d", LIVES));
+			firstStage.setScene(winScene);
+			restart(firstStage);
+				
 		}
 		if (LIVES == 0) {
-			root.getChildren().add(failure);
+			
 			animation.pause();
+			finalScoreLabel.setText(String.format("SCORE: %d", SCORE));
+			ball.lives = 3;
+			brickController.score = 0;
+			SCORE = 0;
+			scoreLabel.setText(String.format("CURRENT SCORE: %d", SCORE));
+			lifeLabel.setText(String.format("LIVES LEFT: %d", LIVES));
+			firstStage.setScene(lossScene);
+			restart(firstStage);	
 		}
 
 	}
 
 	public static void main(String[] args) {
-		Application.launch(args);
+		Application.launch(args);		
 	}
 
 }

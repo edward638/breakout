@@ -23,10 +23,9 @@ public class Brick extends Item {
 
 	public void ReleasePower(PowerController powerController, Group root) {
 		Random rand = new Random();
-		// 10% of dropping a power up
 
-		if (rand.nextInt(10) > 7) {
-			powerController.AddPower(4, xCoord, yCoord, rand.nextInt(100) + 50, root);
+		if (rand.nextInt(10) > 6) {
+			powerController.AddPower(rand.nextInt(8)+1, xCoord, yCoord, rand.nextInt(100) + 50, root);
 		}
 
 	}

@@ -10,7 +10,7 @@ public class PowerController {
 	Label powerupInfo = new Label();
 
 	public PowerController(Group root, int YSIZE) {
-		powerupInfo.setLayoutY(YSIZE - 50);
+		powerupInfo.setLayoutY(YSIZE - 30);
 		root.getChildren().add(powerupInfo);
 	}
 
@@ -41,8 +41,10 @@ public class PowerController {
 					powerupInfo.setText("Paddle size stretched!");
 				if (curr.powerType == 3)
 					powerupInfo.setText("POWER BALL!");
-				else powerupInfo.setText("POWER DOWN!");
-				
+				if (curr.powerType == 4) {
+					if (curr.powerDownType == 0) powerupInfo.setText("POWER DOWN! PADDLE SIZE DECREASED!");
+					else powerupInfo.setText("POWER DOWN! BALL SPEED INCREASED!");
+				}
 				curr.ActivatePower(ball, paddle, root);
 				root.getChildren().remove(curr.imageview);
 				powerlist.remove(y);

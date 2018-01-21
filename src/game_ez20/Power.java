@@ -15,6 +15,7 @@ public class Power extends Item {
 	Image powerBall = new Image(getClass().getClassLoader().getResourceAsStream("pointspower.gif"));
 	Image powerDown = new Image(getClass().getClassLoader().getResourceAsStream("laserpower.gif"));
 
+	int powerDownType = 0;
 	int speed;
 	int powerType;
 
@@ -24,6 +25,8 @@ public class Power extends Item {
 		powermap.put(2, stretchPaddle);
 		powermap.put(3, powerBall);
 		powermap.put(4, powerDown);
+		
+		if (startPowerType > 4) startPowerType = 4;
 
 		imageview = new ImageView(powermap.get(startPowerType));
 		powerType = startPowerType;
@@ -38,8 +41,9 @@ public class Power extends Item {
 		if (startPowerType == 4) {
 			imageview.setFitHeight(imageview.getBoundsInParent().getHeight()*5);
 			imageview.setFitWidth(imageview.getBoundsInParent().getWidth()*5);
+			Random rand = new Random();
+			powerDownType = rand.nextInt(1);
 		}
-		System.out.println("big");
 		
 	}
 
@@ -50,23 +54,22 @@ public class Power extends Item {
 	public void ActivatePower(Ball ball, Paddle paddle, Group root) {
 		if (powerType == 1) {
 			ball.lives++;
-
 		}
 
-		if (powerType == 2) {
-			paddle.imageview.setFitWidth(paddle.ogWidth * 1.5);
+		else if (powerType == 2) {
+			paddle.imageview.setFitWidth(paddle.imageview.getBoundsInParent().getWidth() * 2);
+			
 			root.getChildren().remove(paddle.imageview);
 			root.getChildren().add(paddle.imageview);
 			paddle.stretchPaddleTime = 5;
 		}
 
-		if (powerType == 3) {
+		else if (powerType == 3) {
 			ball.powerBall = 1;
 		}
 		
-		if (powerType == 4) {
-			Random rand = new Random();
-			if (rand.nextInt(2)+1>1) {
+		else {
+			if (powerDownType == 0) {
 				paddle.imageview.setFitWidth(paddle.ogWidth / 2);
 				root.getChildren().remove(paddle.imageview);
 				root.getChildren().add(paddle.imageview);
