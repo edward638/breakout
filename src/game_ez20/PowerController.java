@@ -15,7 +15,6 @@ public class PowerController {
 	}
 
 	public void AddPower(int startPowerType, int startX, int startY, int startSpeed, Group root) {
-
 		Power tempPower = new Power(startPowerType, startX, startY, startSpeed);
 		powerlist.add(tempPower);
 		root.getChildren().add(tempPower.imageview);
@@ -33,8 +32,8 @@ public class PowerController {
 			if (curr.imageview.getY() > YSIZE) {
 				root.getChildren().remove(curr.imageview);
 				powerlist.remove(y);
-
-			} else if (curr.imageview.getBoundsInParent().intersects(paddle.imageview.getBoundsInParent())) {
+			} 
+			else if (curr.imageview.getBoundsInParent().intersects(paddle.imageview.getBoundsInParent())) {
 				if (curr.powerType == 1)
 					powerupInfo.setText("Extra life earned!");
 				if (curr.powerType == 2)
@@ -51,6 +50,14 @@ public class PowerController {
 
 			}
 
+		}
+	}
+	
+	public void clear(Group root) {
+		for (int y = 0; y < powerlist.size(); y++) {
+			Power curr = powerlist.get(y);
+			root.getChildren().remove(curr.imageview);
+			powerlist.remove(y);
 		}
 	}
 

@@ -20,7 +20,7 @@ public class Ball extends Item {
 		speed = startSpeed;
 		ogSpeed = startSpeed;
 		size = startSize;
-		movable = true;
+		movable = false;
 		isOn = true;
 		imageview.setFitHeight(size);
 		imageview.setFitWidth(size);
