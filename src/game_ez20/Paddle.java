@@ -49,6 +49,9 @@ public class Paddle extends Item {
 		if (code == KeyCode.RIGHT) {
 			if ((imageview.getX() + imageview.getBoundsInParent().getWidth()) < XSIZE)
 				imageview.setX(imageview.getX() + speed);
+			else {
+				imageview.setX(0); // allows for paddle wraparound
+			}
 			if (ball.movable == false) {
 				ball.movable = true;
 				ball.goLeft();
@@ -57,6 +60,9 @@ public class Paddle extends Item {
 		if (code == KeyCode.LEFT) {
 			if (imageview.getX() > 0)
 				imageview.setX(imageview.getX() - speed);
+			else {
+				imageview.setX(XSIZE-imageview.getBoundsInParent().getWidth()); // allows for paddle wraparound
+			}
 			if (ball.movable == false) {
 				ball.movable = true;
 				ball.goRight();

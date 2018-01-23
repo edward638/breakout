@@ -43,16 +43,20 @@ public class Breakout extends Application {
 	private Image paddleImage = new Image(getClass().getClassLoader().getResourceAsStream(PADDLE_IMAGE));
 	private int LIVES = 3;
 	private int SCORE = 0;
+	private int LEVEL = 1;
 	private Label lifeLabel;
 	private Label scoreLabel;
 	private Label finalScoreLabel;
 	private Label finalWinScoreLabel;
+	private Label levelLabel;
 
 	public void restart(Stage firstStage) {
 		root.getChildren().clear();
-
+		LIVES = 3;
+		levelLabel = new Label(String.format("LEVEL: %d", LEVEL));
 		lifeLabel = new Label(String.format("LIVES LEFT: %d", LIVES));
 		scoreLabel = new Label(String.format("SCORE: %d", SCORE));
+		levelLabel.setLayoutY(30);
 		scoreLabel.setLayoutY(15);
 		paddle = new Paddle(paddleImage, XSIZE / 2 - 25, YSIZE - 50, PADDLE_SPEED, PADDLE_SIZE);
 		ball = new Ball(ballImage, paddle.xCoord + (int) paddle.imageview.getBoundsInParent().getWidth() / 2,
@@ -63,6 +67,7 @@ public class Breakout extends Application {
 		brickController.drawBricks(root);
 		root.getChildren().add(scoreLabel);
 		root.getChildren().add(lifeLabel);
+		root.getChildren().add(levelLabel);
 		root.getChildren().add(ball.imageview);
 		root.getChildren().add(paddle.imageview);
 
@@ -185,6 +190,8 @@ public class Breakout extends Application {
 			brickController.drawBricks(root);
 			powerController.clear(root);
 			ball.reset(XSIZE, YSIZE, paddle, LIVES);
+			LEVEL = 1;
+			levelLabel.setText(String.format("LEVEL: %d", LEVEL));
 
 		}
 		if (code == KeyCode.DIGIT2) {
@@ -195,6 +202,8 @@ public class Breakout extends Application {
 			brickController.drawBricks(root);
 			powerController.clear(root);
 			ball.reset(XSIZE, YSIZE, paddle, LIVES);
+			LEVEL = 2;
+			levelLabel.setText(String.format("LEVEL: %d", LEVEL));
 
 		}
 		if (code == KeyCode.DIGIT3) {
@@ -205,6 +214,8 @@ public class Breakout extends Application {
 			brickController.drawBricks(root);
 			powerController.clear(root);
 			ball.reset(XSIZE, YSIZE, paddle, LIVES);
+			LEVEL = 3;
+			levelLabel.setText(String.format("LEVEL: %d", LEVEL));
 
 		}
 		if (code == KeyCode.Q) { // cheat code for slower ball
@@ -245,14 +256,15 @@ public class Breakout extends Application {
 			brickController.drawBricks(root);
 			ball.reset(XSIZE, YSIZE, paddle, LIVES);
 			powerController.clear(root);
-
+			LEVEL++;
+			levelLabel.setText(String.format("LEVEL: %d", LEVEL));
 			LIVES = LIVES + 1;
 		}
 
 		if (brickController.nextLevel() && ((brickController.level + 1) == 4)) {
 			animation.pause();
 			finalWinScoreLabel.setText(String.format("SCORE: %d", SCORE));
-
+			LEVEL = 1;
 			SCORE = 0;
 			scoreLabel.setText(String.format("CURRENT SCORE: %d", SCORE));
 			lifeLabel.setText(String.format("LIVES LEFT: %d", LIVES));
@@ -263,7 +275,7 @@ public class Breakout extends Application {
 		if (LIVES == 0) {
 			animation.pause();
 			finalScoreLabel.setText(String.format("SCORE: %d", SCORE));
-
+			LEVEL = 1;
 			SCORE = 0;
 			scoreLabel.setText(String.format("CURRENT SCORE: %d", SCORE));
 			lifeLabel.setText(String.format("LIVES LEFT: %d", LIVES));
