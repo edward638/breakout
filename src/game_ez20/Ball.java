@@ -3,6 +3,8 @@ package game_ez20;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+// class used for ball object. The ball is used to bounce around and break bricks. 
+
 public class Ball extends Item {
 	private int speed;
 	private int size;
@@ -28,6 +30,8 @@ public class Ball extends Item {
 		imageview.setY(yCoord);
 	}
 
+	// these three methods are used to take care of the powerful ball powerup
+	
 	public int getPowerBall() {
 		return powerBall;
 	}
@@ -39,6 +43,8 @@ public class Ball extends Item {
 	public void reducePowerBall() {
 		if (powerBall >0) powerBall = 0;
 	}
+	
+	// the next four methods change the direction of the ball
 	
 	public void goLeft() {
 		xDirect = -1;
@@ -52,6 +58,9 @@ public class Ball extends Item {
 	public void goUp() {
 		yDirect = -1;
 	}
+	
+	// these three methods 
+	
 	public void addSpeedTime() {
 		speedTime = 5;
 	}
@@ -61,6 +70,8 @@ public class Ball extends Item {
 	public void decreaseSpeed() {
 		if (speed > 10) speed -= 20;
 	}
+	
+	// a ball is reset when it goes to the bottom of the screen, or when a level is beat.
 	
 	public void reset(int XSIZE, int YSIZE, Paddle paddle, int LIVES) {
 		movable = false;
@@ -73,6 +84,8 @@ public class Ball extends Item {
 		yDirect = -1;
 	}
 	
+	// deals with the lives in game
+	
 	public void extraLife() {
 		lives++;
 	}
@@ -80,6 +93,9 @@ public class Ball extends Item {
 	public int getLives() {
 		return lives;
 	}
+	
+	// updates ball's position and power ups 
+	
 	public void update(double elapsedTime, int XSIZE, int YSIZE, Paddle paddle, int LIVES, BrickController brickController) {
 		if (movable) {
 			imageview.setX(imageview.getX() + speed * elapsedTime * xDirect);
@@ -115,7 +131,7 @@ public class Ball extends Item {
 				powerBall = 0;
 			}
 
-			// right side of paddle bounces ball to the right
+			// right side of paddle bounces ball to the right, left bounces ball to the left
 			if (imageview.getX() >= paddle.imageview.getX() + paddle.imageview.getBoundsInParent().getWidth() / 2)
 				xDirect = 1;
 			else

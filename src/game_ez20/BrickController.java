@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-
+// class used to manage all the bricks in a level.
 
 public class BrickController {
 	public ArrayList<Brick> bricklist = new ArrayList<Brick>();
@@ -31,6 +31,8 @@ public class BrickController {
 	int score = 0;
 	Map<Integer, String> levelmap = new HashMap<Integer, String>();
 
+	// levels are read in through a text file, bricks are put into an arraylist
+	
 	public BrickController(int startLevel, int startScore) {
 		score = startScore;
 		level = startLevel;
@@ -69,6 +71,8 @@ public class BrickController {
 
 	}
 
+	// draws all the bricks in the arraylist
+	
 	public void drawBricks(Group root) {
 		for (int x = 0; x < bricklist.size(); x++) {
 			root.getChildren().add(bricklist.get(x).imageview);
@@ -83,12 +87,17 @@ public class BrickController {
 		return usedPowerBall;
 	}
 	
+	// checks to see if a brick was hit by the ball
+	
 	public void CollisionChecker(Ball ball, Group root, PowerController powerController) {
 
 		for (int y = 0; y < bricklist.size(); y++) {
 			if (ball.imageview.getBoundsInParent().intersects(bricklist.get(y).imageview.getBoundsInParent())) {
 				
 				scoreAdd();
+				
+				// powerful ball doesn't change directions when it hits a ball
+				
 				if (ball.getPowerBall() > 0) {
 					bricklist.get(y).ReleasePower(powerController, root);
 					root.getChildren().remove(bricklist.get(y).imageview);
@@ -135,6 +144,8 @@ public class BrickController {
 		
 	}
 
+	// only go to next level when all the bricks are gone
+	
 	public boolean nextLevel() {
 		return bricklist.isEmpty();
 	}

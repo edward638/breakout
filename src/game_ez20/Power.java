@@ -7,6 +7,8 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+// this class is used for power up and power down objects, which drop from bricks randomly.
+
 public class Power extends Item {
 	private Map<Integer, Image> powermap = new HashMap<Integer, Image>();
 
@@ -19,6 +21,8 @@ public class Power extends Item {
 	private int speed;
 	private int powerType;
 
+	// the power up looks different based on which power it has
+	
 	public Power(int startPowerType, int startX, int startY, int startSpeed) {
 
 		powermap.put(1, extraLife);
@@ -54,10 +58,14 @@ public class Power extends Item {
 		return powerDownType;
 	}
 	
+	// power ups fall down vertically 
+	
 	public void update(double elapsedTime) {
 		imageview.setY(imageview.getY() + speed * elapsedTime);
 	}
 
+	// power up is activated when it hits the paddle
+	
 	public void ActivatePower(Ball ball, Paddle paddle, Group root) {
 		if (powerType == 1) {
 			ball.extraLife();

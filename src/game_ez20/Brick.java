@@ -6,6 +6,9 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+// this class creates a brick object. Bricks are organized through a brickcontroller object. 
+// bricks are not movable, are located somewhere in the top of the screen, and have health (number of hits required to break brick)
+
 public class Brick extends Item {
 
 	private int health;
@@ -21,6 +24,8 @@ public class Brick extends Item {
 		imageview.setY(yCoord);
 	}
 
+	// a brick will randomly drop a powerup or powerdown when broken
+	
 	public void ReleasePower(PowerController powerController, Group root) {
 		Random rand = new Random();
 
@@ -33,6 +38,7 @@ public class Brick extends Item {
 	public int getHealth() {
 		return health;
 	}
+	
 	public void loseHealth() {
 		health--;
 	}

@@ -4,6 +4,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 
+// this class is for the paddle object. The paddle is primarily controlled by the user to manipulate the ball.
+
 public class Paddle extends Item {
 
 	private int speed;
@@ -12,13 +14,20 @@ public class Paddle extends Item {
 	private boolean vertical = false;
 	private double ogWidth;
 
+	// allows for vertical movement of the paddle
+
 	public void enableVertical() {
 		vertical = (!vertical);
 	}
 	
+	// when paddle stretch powerup is collected, the paddle is stretched for 5 bounces
+	
 	public void addStretch() {
 		stretchPaddleTime = 5;
 	}
+	
+	// ogWidth = original width
+	
 	public double getOgWidth() {
 		return ogWidth;
 	}
@@ -44,7 +53,8 @@ public class Paddle extends Item {
 		ogWidth = imageview.getBoundsInParent().getWidth();
 	}
 
-
+	// controls movement of paddle
+	
 	public void movePaddle(KeyCode code, Ball ball, int XSIZE, int YSIZE) {
 		if (code == KeyCode.RIGHT) {
 			if ((imageview.getX() + imageview.getBoundsInParent().getWidth()) < XSIZE)

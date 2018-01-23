@@ -15,6 +15,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+// main class which runs program
+
 public class Breakout extends Application {
 
 	private final String PADDLE_IMAGE = "paddle.gif";
@@ -50,6 +52,8 @@ public class Breakout extends Application {
 	private Label finalWinScoreLabel;
 	private Label levelLabel;
 
+	// sets up the actual game scene past the splash screen
+
 	public void restart(Stage firstStage) {
 		root.getChildren().clear();
 		LIVES = 3;
@@ -78,6 +82,8 @@ public class Breakout extends Application {
 		animation.getKeyFrames().add(frame);
 		animation.play();
 	}
+
+	// scene for splash screen
 
 	public void welcome(Stage firstStage) {
 		firstStage.setScene(startScene);
@@ -118,6 +124,8 @@ public class Breakout extends Application {
 
 	}
 
+	// scene shown when game is won
+
 	public void victory(Stage firstStage) {
 		Image win = new Image(getClass().getClassLoader().getResourceAsStream("congrats.PNG"));
 		ImageView gameWin = new ImageView(win);
@@ -141,6 +149,8 @@ public class Breakout extends Application {
 
 	}
 
+	// scene shown when game is lost
+
 	public void failure(Stage firstStage) {
 		Image loss = new Image(getClass().getClassLoader().getResourceAsStream("failure.PNG"));
 		ImageView gameLoss = new ImageView(loss);
@@ -163,6 +173,7 @@ public class Breakout extends Application {
 		root4.getChildren().add(finalScoreLabel);
 	}
 
+	// sets up all the scenes
 	@Override
 	public void start(Stage firstStage) {
 		firstStage.setTitle("Breakout");
@@ -177,6 +188,8 @@ public class Breakout extends Application {
 		victory(firstStage);
 		failure(firstStage);
 	}
+	
+	// takes in key input to move the paddle, and for cheat code input
 
 	private void keyInput(KeyCode code) {
 
@@ -238,6 +251,8 @@ public class Breakout extends Application {
 		}
 	}
 
+	// updates power up's and ball's position, and checks if bricks are broken, and if level is beat
+	
 	private void step(double elapsedTime, Stage firstStage) {
 		ball.update(elapsedTime, XSIZE, YSIZE, paddle, LIVES, brickController);
 
@@ -284,6 +299,8 @@ public class Breakout extends Application {
 		}
 	}
 
+	// starts game
+	
 	public static void main(String[] args) {
 		Application.launch(args);
 	}
