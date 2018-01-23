@@ -6,12 +6,31 @@ import javafx.scene.input.KeyCode;
 
 public class Paddle extends Item {
 
-	public int speed;
-	public int size;
-	public int stretchPaddleTime = 0;
-	public boolean vertical = false;
-	public double ogWidth;
+	private int speed;
+	private int size;
+	private int stretchPaddleTime = 0;
+	private boolean vertical = false;
+	private double ogWidth;
 
+	public void enableVertical() {
+		vertical = (!vertical);
+	}
+	
+	public void addStretch() {
+		stretchPaddleTime = 5;
+	}
+	public double getOgWidth() {
+		return ogWidth;
+	}
+	
+	public void reduceStretch() {
+		if (stretchPaddleTime > 0) {
+			stretchPaddleTime--;
+			if (stretchPaddleTime == 0)
+				imageview.setFitWidth(ogWidth);
+		}
+	}
+	
 	public Paddle(Image image, int startX, int startY, int startSpeed, int startSize) {
 		imageview = new ImageView(image);
 		xCoord = startX;
@@ -25,9 +44,6 @@ public class Paddle extends Item {
 		ogWidth = imageview.getBoundsInParent().getWidth();
 	}
 
-	public void update(double elapsedTime) {
-
-	}
 
 	public void movePaddle(KeyCode code, Ball ball, int XSIZE, int YSIZE) {
 		if (code == KeyCode.RIGHT) {
@@ -35,7 +51,7 @@ public class Paddle extends Item {
 				imageview.setX(imageview.getX() + speed);
 			if (ball.movable == false) {
 				ball.movable = true;
-				ball.xDirect = -1;
+				ball.goLeft();
 			}
 		}
 		if (code == KeyCode.LEFT) {
@@ -43,7 +59,7 @@ public class Paddle extends Item {
 				imageview.setX(imageview.getX() - speed);
 			if (ball.movable == false) {
 				ball.movable = true;
-				ball.xDirect = 1;
+				ball.goRight();
 			}
 		}
 
@@ -53,7 +69,7 @@ public class Paddle extends Item {
 					imageview.setY(imageview.getY() + speed);
 				if (ball.movable == false) {
 					ball.movable = true;
-					ball.xDirect = -1;
+					ball.goLeft();
 				}
 			}
 			if (code == KeyCode.UP) {
@@ -61,7 +77,7 @@ public class Paddle extends Item {
 					imageview.setY(imageview.getY() - speed);
 				if (ball.movable == false) {
 					ball.movable = true;
-					ball.xDirect = 1;
+					ball.goRight();
 				}
 			}
 		}

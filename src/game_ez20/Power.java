@@ -8,16 +8,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Power extends Item {
-	Map<Integer, Image> powermap = new HashMap<Integer, Image>();
+	private Map<Integer, Image> powermap = new HashMap<Integer, Image>();
 
-	Image extraLife = new Image(getClass().getClassLoader().getResourceAsStream("extraballpower.gif"));
-	Image stretchPaddle = new Image(getClass().getClassLoader().getResourceAsStream("sizepower.gif"));
-	Image powerBall = new Image(getClass().getClassLoader().getResourceAsStream("pointspower.gif"));
-	Image powerDown = new Image(getClass().getClassLoader().getResourceAsStream("laserpower.gif"));
+	private Image extraLife = new Image(getClass().getClassLoader().getResourceAsStream("extraballpower.gif"));
+	private Image stretchPaddle = new Image(getClass().getClassLoader().getResourceAsStream("sizepower.gif"));
+	private Image powerBall = new Image(getClass().getClassLoader().getResourceAsStream("pointspower.gif"));
+	private Image powerDown = new Image(getClass().getClassLoader().getResourceAsStream("laserpower.gif"));
 
-	int powerDownType = 0;
-	int speed;
-	int powerType;
+	private int powerDownType = 0;
+	private int speed;
+	private int powerType;
 
 	public Power(int startPowerType, int startX, int startY, int startSpeed) {
 
@@ -46,14 +46,21 @@ public class Power extends Item {
 		}
 		
 	}
-
+	
+	public int getPowerType() {
+		return powerType;
+	}
+	public int getPowerDownType() {
+		return powerDownType;
+	}
+	
 	public void update(double elapsedTime) {
 		imageview.setY(imageview.getY() + speed * elapsedTime);
 	}
 
 	public void ActivatePower(Ball ball, Paddle paddle, Group root) {
 		if (powerType == 1) {
-			ball.lives++;
+			ball.extraLife();
 		}
 
 		else if (powerType == 2) {
@@ -61,23 +68,26 @@ public class Power extends Item {
 			
 			root.getChildren().remove(paddle.imageview);
 			root.getChildren().add(paddle.imageview);
-			paddle.stretchPaddleTime = 5;
+			paddle.addStretch();
 		}
 
 		else if (powerType == 3) {
-			ball.powerBall = 1;
+			ball.increasePowerBall();
 		}
 		
 		else {
 			if (powerDownType == 0) {
-				paddle.imageview.setFitWidth(paddle.ogWidth / 2);
+				paddle.imageview.setFitWidth(paddle.getOgWidth() / 2);
+				
 				root.getChildren().remove(paddle.imageview);
 				root.getChildren().add(paddle.imageview);
-				paddle.stretchPaddleTime = 5;
+				paddle.addStretch();
 			}
 			else {
-				ball.speed = ball.ogSpeed + 80; 
-				ball.speedTime = 5;
+				for (int x = 0; x<4 ; x++) {
+					ball.increaseSpeed();
+				}
+				ball.addSpeedTime();
 			}
 		}
 	}

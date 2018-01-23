@@ -6,8 +6,8 @@ import javafx.scene.Group;
 import javafx.scene.control.Label;
 
 public class PowerController {
-	public ArrayList<Power> powerlist = new ArrayList<Power>();
-	Label powerupInfo = new Label();
+	private ArrayList<Power> powerlist = new ArrayList<Power>();
+	private Label powerupInfo = new Label();
 
 	public PowerController(Group root, int YSIZE) {
 		powerupInfo.setLayoutY(YSIZE - 30);
@@ -34,14 +34,14 @@ public class PowerController {
 				powerlist.remove(y);
 			} 
 			else if (curr.imageview.getBoundsInParent().intersects(paddle.imageview.getBoundsInParent())) {
-				if (curr.powerType == 1)
+				if (curr.getPowerType() == 1)
 					powerupInfo.setText("Extra life earned!");
-				if (curr.powerType == 2)
+				if (curr.getPowerType()  == 2)
 					powerupInfo.setText("Paddle size stretched!");
-				if (curr.powerType == 3)
+				if (curr.getPowerType()  == 3)
 					powerupInfo.setText("POWER BALL!");
-				if (curr.powerType == 4) {
-					if (curr.powerDownType == 0) powerupInfo.setText("POWER DOWN! PADDLE SIZE DECREASED!");
+				if (curr.getPowerType()  == 4) {
+					if (curr.getPowerDownType() == 0) powerupInfo.setText("POWER DOWN! PADDLE SIZE DECREASED!");
 					else powerupInfo.setText("POWER DOWN! BALL SPEED INCREASED!");
 				}
 				curr.ActivatePower(ball, paddle, root);

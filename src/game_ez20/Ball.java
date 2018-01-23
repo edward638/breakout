@@ -4,14 +4,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Ball extends Item {
-	public int speed;
-	public int size;
-	public int lives = 3;
-	public int xDirect = 1;
-	public int yDirect = -1;
-	public int powerBall = 0;
-	public int ogSpeed;
-	public int speedTime = 0;
+	private int speed;
+	private int size;
+	private int lives = 3;
+	private int xDirect = 1;
+	private int yDirect = -1;
+	private int powerBall = 0;
+	private int ogSpeed;
+	private int speedTime = 0;
 	
 	public Ball(Image image, int startX, int startY, int startSpeed, int startSize) {
 		imageview = new ImageView(image);
@@ -28,18 +28,59 @@ public class Ball extends Item {
 		imageview.setY(yCoord);
 	}
 
+	public int getPowerBall() {
+		return powerBall;
+	}
+	
+	public void increasePowerBall() {
+		powerBall = 1;
+	}
+	
+	public void reducePowerBall() {
+		if (powerBall >0) powerBall = 0;
+	}
+	
+	public void goLeft() {
+		xDirect = -1;
+	}
+	public void goRight() {
+		xDirect = 1;
+	}
+	public void goDown() {
+		yDirect = 1;
+	}
+	public void goUp() {
+		yDirect = -1;
+	}
+	public void addSpeedTime() {
+		speedTime = 5;
+	}
+	public void increaseSpeed() {
+		speed += 20;
+	}
+	public void decreaseSpeed() {
+		if (speed > 10) speed -= 20;
+	}
+	
 	public void reset(int XSIZE, int YSIZE, Paddle paddle, int LIVES) {
 		movable = false;
 		imageview.setX(XSIZE / 2);
 		paddle.imageview.setX(XSIZE / 2 - 25);
 		imageview.setY(YSIZE - 65);
 		paddle.imageview.setY(YSIZE - 50);
-		lives = LIVES - 1;
+		lives = LIVES;
 
 		yDirect = -1;
 	}
+	
+	public void extraLife() {
+		lives++;
+	}
 
-	public void update(double elapsedTime, int XSIZE, int YSIZE, Paddle paddle, int LIVES) {
+	public int getLives() {
+		return lives;
+	}
+	public void update(double elapsedTime, int XSIZE, int YSIZE, Paddle paddle, int LIVES, BrickController brickController) {
 		if (movable) {
 			imageview.setX(imageview.getX() + speed * elapsedTime * xDirect);
 			imageview.setY(imageview.getY() + speed * elapsedTime * yDirect);
@@ -54,7 +95,7 @@ public class Ball extends Item {
 		}
 		if (imageview.getY() >= YSIZE) {
 			reset(XSIZE, YSIZE, paddle, LIVES);
-
+			lives--;
 		}
 		if (imageview.getY() <= 0) {
 			yDirect = 1;
@@ -62,11 +103,7 @@ public class Ball extends Item {
 		if (imageview.getBoundsInParent().intersects(paddle.imageview.getBoundsInParent())) {
 			yDirect = -1;
 
-			if (paddle.stretchPaddleTime > 0) {
-				paddle.stretchPaddleTime--;
-				if (paddle.stretchPaddleTime == 0)
-					paddle.imageview.setFitWidth(paddle.ogWidth);
-			}
+			paddle.reduceStretch();
 			
 			if (speedTime > 0) {
 				speedTime--;
@@ -74,7 +111,7 @@ public class Ball extends Item {
 					speed = ogSpeed; 
 			}
 			
-			if (powerBall > 1) {
+			if (brickController.getUsedPowerBall()) {
 				powerBall = 0;
 			}
 

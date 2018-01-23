@@ -3,16 +3,18 @@ package game_ez20;
 import java.util.*;
 
 import javafx.scene.Group;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
+
+
 public class BrickController {
 	public ArrayList<Brick> bricklist = new ArrayList<Brick>();
-
+	private boolean usedPowerBall = false;
+	
 	Image brick1 = new Image(getClass().getClassLoader().getResourceAsStream("brick1.gif"));
 	Image brick2 = new Image(getClass().getClassLoader().getResourceAsStream("brick2.gif"));
 	Image brick3 = new Image(getClass().getClassLoader().getResourceAsStream("brick3.gif"));
@@ -26,7 +28,7 @@ public class BrickController {
 	Map<Integer, Image> brickmap = new HashMap<Integer, Image>();
 	File file;
 	int level;
-	int score;
+	int score = 0;
 	Map<Integer, String> levelmap = new HashMap<Integer, String>();
 
 	public BrickController(int startLevel, int startScore) {
@@ -77,57 +79,60 @@ public class BrickController {
 		score = score + 1000;
 	}
 	
+	public boolean getUsedPowerBall() {
+		return usedPowerBall;
+	}
+	
 	public void CollisionChecker(Ball ball, Group root, PowerController powerController) {
 
 		for (int y = 0; y < bricklist.size(); y++) {
 			if (ball.imageview.getBoundsInParent().intersects(bricklist.get(y).imageview.getBoundsInParent())) {
-				// decide which way to bounce the ball -> check what side of the brick was hit?
+				
 				scoreAdd();
-				if (ball.powerBall > 0) {
+				if (ball.getPowerBall() > 0) {
 					bricklist.get(y).ReleasePower(powerController, root);
 					root.getChildren().remove(bricklist.get(y).imageview);
 					bricklist.remove(y);
-					ball.powerBall++;
+					usedPowerBall = true;
 				} else {
 					if (ball.imageview.getX() >= (bricklist.get(y).imageview.getX()
 							+ bricklist.get(y).imageview.getBoundsInParent().getWidth())) {
-						// System.out.println("ball's coordinates are " + ball.imageview.getX() + "," +
-						// ball.imageview.getY() + " " + bricklist.get(y).imageview.getX() + " " +
-						// bricklist.get(y).imageview.getBoundsInParent().getWidth());
-						ball.xDirect = 1;
+						
+						ball.goRight();
 					}
 					if (ball.imageview.getX() <= (bricklist.get(y).imageview.getX())) {
-						ball.xDirect = -1;
+						ball.goLeft();
 					}
 					if (ball.imageview.getY() <= (bricklist.get(y).imageview.getY())) {
-						ball.yDirect = -1;
+						ball.goUp();
 					}
 					if (ball.imageview.getY() >= (bricklist.get(y).imageview.getY()
 							+ bricklist.get(y).imageview.getBoundsInParent().getHeight())) {
-						ball.yDirect = 1;
+						ball.goDown();
 					}
 
-					bricklist.get(y).health--;
+					bricklist.get(y).loseHealth();
 					
 					
-					if (bricklist.get(y).health == 0) {
+					if (bricklist.get(y).getHealth() == 0) {
 						bricklist.get(y).ReleasePower(powerController, root);
 						root.getChildren().remove(bricklist.get(y).imageview);
 						bricklist.remove(y);
 					} else {
 						root.getChildren().remove(bricklist.get(y).imageview);
-						bricklist.get(y).imageview = new ImageView(brickmap.get(bricklist.get(y).health));
+						bricklist.get(y).imageview = new ImageView(brickmap.get(bricklist.get(y).getHealth()));
 						bricklist.get(y).imageview.setX(bricklist.get(y).xCoord);
 						bricklist.get(y).imageview.setY(bricklist.get(y).yCoord);
 						root.getChildren().add(bricklist.get(y).imageview);
 
 					}
+					usedPowerBall = false;
 				}
 
 			}
 
 		}
-
+		
 	}
 
 	public boolean nextLevel() {

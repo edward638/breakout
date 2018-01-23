@@ -185,7 +185,7 @@ public class Breakout extends Application {
 			brickController.drawBricks(root);
 			powerController.clear(root);
 			ball.reset(XSIZE, YSIZE, paddle, LIVES);
-			ball.lives++;
+
 		}
 		if (code == KeyCode.DIGIT2) {
 			for (int x = 0; x < brickController.bricklist.size(); x++) {
@@ -195,7 +195,7 @@ public class Breakout extends Application {
 			brickController.drawBricks(root);
 			powerController.clear(root);
 			ball.reset(XSIZE, YSIZE, paddle, LIVES);
-			ball.lives++;
+
 		}
 		if (code == KeyCode.DIGIT3) {
 			for (int x = 0; x < brickController.bricklist.size(); x++) {
@@ -205,32 +205,32 @@ public class Breakout extends Application {
 			brickController.drawBricks(root);
 			powerController.clear(root);
 			ball.reset(XSIZE, YSIZE, paddle, LIVES);
-			ball.lives++;
+
 		}
-		if (code == KeyCode.Q && ball.speed > 10) {
-			ball.speed = ball.speed - 20;
+		if (code == KeyCode.Q) { // cheat code for slower ball
+			ball.decreaseSpeed();
 		}
-		if (code == KeyCode.W) {
-			ball.speed = ball.speed + 20;
+		if (code == KeyCode.W) { // cheat code for faster ball
+			ball.increaseSpeed();
 		}
-		if (code == KeyCode.L) {
-			ball.lives++;
+		if (code == KeyCode.L) { // cheat code for extra ball
+			ball.extraLife();
 		}
-		if (code == KeyCode.A) {
-			paddle.vertical = (!paddle.vertical);
+		if (code == KeyCode.A) { // cheat code for enabling/disabling vertical paddle movement
+			paddle.enableVertical();
 		}
-		if (code == KeyCode.P) {
+		if (code == KeyCode.P) { // cheat code for freezing ball
 			ball.movable = false;
 		}
-		if (code == KeyCode.B) {
-			ball.powerBall = 1;
+		if (code == KeyCode.B) { // cheat code for powerful ball powerup
+			ball.increasePowerBall();
 		}
 	}
 
 	private void step(double elapsedTime, Stage firstStage) {
-		ball.update(elapsedTime, XSIZE, YSIZE, paddle, LIVES);
+		ball.update(elapsedTime, XSIZE, YSIZE, paddle, LIVES, brickController);
 
-		LIVES = ball.lives;
+		LIVES = ball.getLives();
 		lifeLabel.setText(String.format("LIVES LEFT: %d", LIVES));
 
 		powerController.update(elapsedTime);
@@ -245,15 +245,14 @@ public class Breakout extends Application {
 			brickController.drawBricks(root);
 			ball.reset(XSIZE, YSIZE, paddle, LIVES);
 			powerController.clear(root);
-			ball.lives++;
+
 			LIVES = LIVES + 1;
 		}
 
 		if (brickController.nextLevel() && ((brickController.level + 1) == 4)) {
 			animation.pause();
 			finalWinScoreLabel.setText(String.format("SCORE: %d", SCORE));
-			ball.lives = 3;
-			brickController.score = 0;
+
 			SCORE = 0;
 			scoreLabel.setText(String.format("CURRENT SCORE: %d", SCORE));
 			lifeLabel.setText(String.format("LIVES LEFT: %d", LIVES));
@@ -264,8 +263,7 @@ public class Breakout extends Application {
 		if (LIVES == 0) {
 			animation.pause();
 			finalScoreLabel.setText(String.format("SCORE: %d", SCORE));
-			ball.lives = 3;
-			brickController.score = 0;
+
 			SCORE = 0;
 			scoreLabel.setText(String.format("CURRENT SCORE: %d", SCORE));
 			lifeLabel.setText(String.format("LIVES LEFT: %d", LIVES));

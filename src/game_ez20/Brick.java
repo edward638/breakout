@@ -8,7 +8,7 @@ import javafx.scene.image.ImageView;
 
 public class Brick extends Item {
 
-	int health;
+	private int health;
 
 	public Brick(Image image, int startX, int startY, int startHealth) {
 		imageview = new ImageView(image);
@@ -29,5 +29,11 @@ public class Brick extends Item {
 		}
 
 	}
-
+	
+	public int getHealth() {
+		return health;
+	}
+	public void loseHealth() {
+		health--;
+	}
 }
