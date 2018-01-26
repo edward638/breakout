@@ -109,6 +109,7 @@ public class Ball extends Item {
 		if (imageview.getX() <= 0) {
 			xDirect = 1;
 		}
+	
 		if (imageview.getY() >= YSIZE) {
 			reset(XSIZE, YSIZE, paddle, LIVES);
 			lives--;

@@ -29,10 +29,12 @@ public class Brick extends Item {
 	public void ReleasePower(PowerController powerController, Group root) {
 		Random rand = new Random();
 
-		if (rand.nextInt(10) > 6) {
-			powerController.AddPower(rand.nextInt(8)+1, xCoord, yCoord, rand.nextInt(100) + 50, root);
+		if (rand.nextInt(10) > 4) {
+			int yo = rand.nextInt(5)+1;
+			powerController.AddPower(yo, xCoord, yCoord, rand.nextInt(100) + 50, root);
+			
 		}
-
+		
 	}
 	
 	public int getHealth() {

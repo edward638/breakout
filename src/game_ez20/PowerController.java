@@ -11,18 +11,38 @@ import javafx.scene.control.Label;
 public class PowerController {
 	private ArrayList<Power> powerlist = new ArrayList<Power>();
 	private Label powerupInfo = new Label();
-
+	
 	public PowerController(Group root, int YSIZE) {
 		powerupInfo.setLayoutY(YSIZE - 30);
 		root.getChildren().add(powerupInfo);
 	}
 
-	
-	
 	public void AddPower(int startPowerType, int startX, int startY, int startSpeed, Group root) {
-		Power tempPower = new Power(startPowerType, startX, startY, startSpeed);
-		powerlist.add(tempPower);
-		root.getChildren().add(tempPower.imageview);
+		if (startPowerType == 1) {
+			Power tempPower = new ExtraLife(startX, startY, startSpeed);
+			tempPower.draw(root);
+			powerlist.add(tempPower);
+		}
+		else if (startPowerType == 2) {
+			Power tempPower = new StretchPaddle(startX, startY, startSpeed);
+			tempPower.draw(root);
+			powerlist.add(tempPower);
+		}
+		else if (startPowerType == 3) {
+			Power tempPower = new PowerBall(startX, startY, startSpeed);
+			tempPower.draw(root);
+			powerlist.add(tempPower);
+		}
+		else if (startPowerType == 4) {
+			Power tempPower = new PowerDownSize(startX, startY, startSpeed);
+			tempPower.draw(root);
+			powerlist.add(tempPower);
+		}
+		else {
+			Power tempPower = new PowerDownSpeed(startX, startY, startSpeed);
+			tempPower.draw(root);
+			powerlist.add(tempPower);
+		}
 	}
 
 	// moves the power ups
@@ -39,24 +59,12 @@ public class PowerController {
 			Power curr = powerlist.get(y);
 
 			if (curr.imageview.getY() > YSIZE) {
-				root.getChildren().remove(curr.imageview);
+				curr.remove(root);
 				powerlist.remove(y);
 			} 
 			else if (curr.imageview.getBoundsInParent().intersects(paddle.imageview.getBoundsInParent())) {
-				if (curr.getPowerType() == 1)
-					powerupInfo.setText("Extra life earned!");
-				if (curr.getPowerType()  == 2)
-					powerupInfo.setText("Paddle size stretched!");
-				if (curr.getPowerType()  == 3)
-					powerupInfo.setText("POWER BALL!");
-				if (curr.getPowerType()  == 4) {
-					if (curr.getPowerDownType() == 0) powerupInfo.setText("POWER DOWN! PADDLE SIZE DECREASED!");
-					else powerupInfo.setText("POWER DOWN! BALL SPEED INCREASED!");
-				}
-				curr.ActivatePower(ball, paddle, root);
-				root.getChildren().remove(curr.imageview);
+				curr.activatePower(ball, paddle, root, powerupInfo);
 				powerlist.remove(y);
-
 			}
 
 		}
