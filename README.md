@@ -9,3 +9,5 @@ Q, W -> slows down the ball/speeds up the ball.
 A -> enables for vertical movement of the paddle. 
 B -> makes the next ball a powerful ball (goes through any brick).
 P -> freezes the ball until paddle is moved.
+
+![](images/breakout.PNG)
